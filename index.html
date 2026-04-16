@@ -4,74 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>阿霓 | 營收主宰系統</title>
-  <style>
-    :root {
-      --primary: #D4AF37; /* 金色 */
-      --bg: #0F0F0F;    /* 深黑背景 */
-      --card-bg: #1A1A1A;
-      --text: #E0E0E0;
-      --text-dim: #888;
-      --accent-red: #FF4D4D;
-      --accent-green: #00E676;
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; background: var(--bg); color: var(--text); margin: 0; }
-    
-    #app { max-width: 500px; margin: 0 auto; min-height: 100vh; padding-bottom: 90px; }
-
-    /* Header */
-    header { padding: 40px 25px 20px; }
-    h1 { font-size: 1.8rem; letter-spacing: 2px; font-weight: 300; }
-    h1 span { color: var(--primary); font-weight: bold; }
-
-    /* Stats Card */
-    .summary-card {
-      background: linear-gradient(145deg, #222, #111);
-      margin: 0 20px 25px; border-radius: 20px; padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333;
-    }
-    .summary-label { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-    .summary-value { font-size: 2.2rem; font-weight: 700; margin: 5px 0 15px; color: #fff; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #333; pt: 15px; padding-top: 15px; }
-    .grid-item span { display: block; font-size: 0.75rem; color: var(--text-dim); }
-    .grid-item b { font-size: 1.1rem; color: var(--primary); }
-
-    /* Tab Switcher */
-    .tabs { display: flex; padding: 0 20px 20px; gap: 20px; }
-    .tab { font-size: 0.9rem; color: var(--text-dim); cursor: pointer; position: relative; padding-bottom: 5px; }
-    .tab.active { color: var(--primary); font-weight: bold; }
-    .tab.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--primary); }
-
-    /* List Items */
-    .list-container { padding: 0 20px; }
-    .card { background: var(--card-bg); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #2a2a2a; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .card-title { font-weight: 600; font-size: 1rem; }
-    .card-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; background: #333; color: var(--primary); }
-    .card-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
-    .card-row label { color: var(--text-dim); }
-    .card-profit { text-align: right; border-top: 1px solid #2a2a2a; padding-top: 10px; margin-top: 10px; font-weight: bold; color: var(--accent-green); }
-
-    /* Bottom Nav */
-    .nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: rgba(20,20,20,0.95); display: flex; padding: 15px 0 30px; border-top: 1px solid #222; backdrop-filter: blur(10px); }
-    .nav-item { flex: 1; text-align: center; color: var(--text-dim); font-size: 0.75rem; cursor: pointer; }
-    .nav-item.active { color: var(--primary); }
-
-    /* Floating Button */
-    .fab { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(212,175,55,0.4); cursor: pointer; z-index: 99; }
-
-    /* Modal */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: flex-end; }
-    .modal-content { background: #1a1a1a; width: 100%; border-radius: 25px 25px 0 0; padding: 30px 25px; border-top: 1px solid var(--primary); }
-    input, select { width: 100%; background: #252525; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; margin: 8px 0 15px; font-size: 1rem; }
-    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-    .btn { flex: 1; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
-    .btn-save { background: var(--primary); color: #000; }
-    .btn-cancel { background: #333; color: #fff; }
-
-    .hidden { display: none; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -80,159 +13,110 @@
     <h1>阿霓 <span>ANNI</span></h1>
   </header>
 
-  <div class="summary-card">
-    <div class="summary-label">本日營收</div>
-    <div class="summary-value" id="today-rev">$0</div>
-    <div class="summary-grid">
-      <div class="grid-item"><span>預估純利</span><b id="today-profit">$0</b></div>
-      <div class="grid-item"><span>毛利率</span><b id="today-margin">0%</b></div>
+  <section id="view-home" class="page active">
+    <div class="summary-card">
+      <div class="summary-label">本日營收</div>
+      <div class="summary-value" id="today-rev">$0</div>
+      <div class="summary-grid">
+        <div class="grid-item"><span>本日純利</span><b id="today-profit">$0</b></div>
+        <div class="grid-item"><span>毛利率</span><b id="today-margin">0%</b></div>
+      </div>
     </div>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchView('sales')">銷售明細</div>
-    <div class="tab" onclick="switchView('purchases')">採購攤提</div>
-    <div class="tab" onclick="switchView('dashboard')">營運總覽</div>
-  </div>
-
-  <div id="sales-view" class="list-container">
+    <div style="padding: 0 20px;">
+      <h3 style="color: var(--text-dim); margin-bottom: 10px;">快速操作</h3>
+      <button class="btn btn-save" style="width: 100%; margin-bottom: 15px;" onclick="showModal('sale-modal')">＋ 新增今日交易</button>
+      <button class="btn btn-cancel" style="width: 100%;" onclick="switchTab('purchases')">去算國際運費</button>
     </div>
+  </section>
 
-  <div id="purchases-view" class="list-container hidden">
+  <section id="view-sales" class="page hidden">
+    <div style="padding: 0 20px 10px;"><h2>歷史銷售明細</h2></div>
+    <div id="sales-list" class="list-container"></div>
+  </section>
+
+  <section id="view-purchases" class="page hidden">
+    <div style="padding: 0 20px 10px;"><h2>國際運費計算機</h2></div>
+    <div class="list-container">
+      <div class="card" style="border-color: var(--primary);">
+        <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 15px;">輸入整批貨的資訊，系統幫妳算出每件衣服該承擔多少運費。</p>
+        <label>該批總國際運費 (台幣)</label>
+        <input type="number" id="calc-total-shipping" placeholder="例: 1500">
+        <label>該批總件數</label>
+        <input type="number" id="calc-total-items" placeholder="例: 50">
+        <button class="btn btn-save" style="width: 100%; margin-top: 10px;" onclick="calculateShipping()">計算單件運費</button>
+        
+        <div id="calc-result" style="margin-top: 15px; text-align: center; font-size: 1.2rem; display: none;">
+          單件請加算成本：<span style="color: var(--accent-green); font-weight: bold;" id="calc-result-num">$0</span>
+        </div>
+      </div>
     </div>
+  </section>
 
-  <div class="fab" onclick="showModal('sale-modal')">＋</div>
+  <section id="view-dashboard" class="page hidden">
+    <div style="padding: 0 20px 10px;"><h2>全盤營收總覽</h2></div>
+    <div class="list-container">
+      <div class="card">
+        <div class="card-row"><label>總營業額</label><span id="dash-rev">$0</span></div>
+        <div class="card-row"><label>總金流手續費</label><span>-$<span id="dash-fee">0</span></span></div>
+        <div class="card-profit" style="font-size: 1.2rem;">總淨利 +$<span id="dash-profit">0</span></div>
+      </div>
+      <div class="card" style="border-color: #2962FF;">
+        <h3 style="margin-top:0; font-size: 1rem; color: #2962FF;">經銷分潤應收款</h3>
+        <p style="font-size: 0.8rem; color: var(--text-dim);">需匯給廠商的貨款總額：</p>
+        <div style="font-size: 1.5rem; font-weight: bold; color: #fff; margin-top: 5px;">$<span id="dash-payable">0</span></div>
+      </div>
+    </div>
+  </section>
 
   <nav class="nav">
-    <div class="nav-item active">首頁</div>
-    <div class="nav-item">儀表板</div>
-    <div class="nav-item">對帳</div>
-    <div class="nav-item">我的</div>
+    <div class="nav-item active" onclick="switchTab('home')">首頁</div>
+    <div class="nav-item" onclick="switchTab('sales')">銷售明細</div>
+    <div class="nav-item" onclick="switchTab('purchases')">採購攤提</div>
+    <div class="nav-item" onclick="switchTab('dashboard')">儀表板</div>
   </nav>
+
+  <div class="fab" onclick="showModal('sale-modal')">＋</div>
 </div>
 
 <div id="sale-modal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-top:0">新增交易錄入</h3>
+    <h3 style="margin-top:0">新增交易</h3>
+    
     <label>交易類型</label>
-    <select id="type" onchange="toggleAffiliateFields()">
-      <option value="self">自營童裝</option>
-      <option value="affiliate">經銷分潤</option>
+    <select id="type" onchange="toggleFields()">
+      <option value="self">自營童裝 (買斷)</option>
+      <option value="affiliate">經銷團購 (分潤)</option>
     </select>
     
-    <label>金額 (售價+運費)</label>
+    <label>訂單總額 (含客收運費)</label>
     <input type="number" id="amount" placeholder="0">
 
     <div id="self-fields">
-      <label>商品採購成本</label>
+      <label>商品原始進價 (單件)</label>
       <input type="number" id="cost" placeholder="0">
+      <label>單件國際運費分攤 <span style="color: var(--primary); font-size: 0.75rem;">(去採購頁算)</span></label>
+      <input type="number" id="shipping" placeholder="0">
     </div>
 
     <div id="affiliate-fields" class="hidden">
-      <label>分潤比例 (%)</label>
+      <label>廠商分潤比例 (%)</label>
       <input type="number" id="percent" value="15">
     </div>
 
-    <label>支付方式</label>
+    <label>客人支付方式 (扣除手續費)</label>
     <select id="payment">
-      <option value="cash">現金 / 轉帳</option>
+      <option value="cash">現金 / 轉帳 (0%)</option>
       <option value="linepay">LINE Pay (2.2%)</option>
-      <option value="credit">信用卡 (2.8%+5)</option>
+      <option value="credit">信用卡 / 藍新 (2.8%+5)</option>
     </select>
 
     <div class="btn-group">
       <button class="btn btn-cancel" onclick="closeModal('sale-modal')">取消</button>
-      <button class="btn btn-save" onclick="addTransaction()">確認儲存</button>
+      <button class="btn btn-save" onclick="saveTransaction()">確認儲存</button>
     </div>
   </div>
 </div>
 
-<script>
-  let data = JSON.parse(localStorage.getItem('anni_data')) || { sales: [], purchases: [] };
-
-  function switchView(view) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById('sales-view').classList.add('hidden');
-    document.getElementById('purchases-view').classList.add('hidden');
-    document.getElementById(view + '-view').classList.remove('hidden');
-    render();
-  }
-
-  function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-  function toggleAffiliateFields() {
-    const type = document.getElementById('type').value;
-    document.getElementById('self-fields').classList.toggle('hidden', type === 'affiliate');
-    document.getElementById('affiliate-fields').classList.toggle('hidden', type !== 'affiliate');
-  }
-
-  function addTransaction() {
-    const type = document.getElementById('type').value;
-    const amount = parseFloat(document.getElementById('amount').value) || 0;
-    const payment = document.getElementById('payment').value;
-    
-    // 金流手續費計算
-    let fee = 0;
-    if(payment === 'linepay') fee = amount * 0.022;
-    if(payment === 'credit') fee = (amount * 0.028) + 5;
-
-    let netProfit = 0;
-    if(type === 'self') {
-      const cost = parseFloat(document.getElementById('cost').value) || 0;
-      netProfit = amount - cost - fee;
-    } else {
-      const percent = parseFloat(document.getElementById('percent').value) || 15;
-      netProfit = (amount * (percent/100)) - fee;
-    }
-
-    data.sales.push({
-      date: new Date().toLocaleDateString(),
-      type, amount, fee, netProfit, 
-      id: 'ORD-' + Math.floor(Math.random()*9000 + 1000)
-    });
-    
-    save();
-    closeModal('sale-modal');
-    render();
-  }
-
-  function save() {
-    localStorage.setItem('anni_data', JSON.stringify(data));
-  }
-
-  function render() {
-    const salesView = document.getElementById('sales-view');
-    salesView.innerHTML = '';
-    
-    let totalRev = 0;
-    let totalProfit = 0;
-
-    data.sales.reverse().forEach(s => {
-      totalRev += s.amount;
-      totalProfit += s.netProfit;
-      
-      salesView.innerHTML += `
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">${s.id}</div>
-            <div class="card-tag">${s.type === 'self' ? '自營童裝' : '經銷分潤'}</div>
-          </div>
-          <div class="card-row"><label>銷售金額</label><span>$${s.amount}</span></div>
-          <div class="card-row"><label>金流成本</label><span>$${Math.round(s.fee)}</span></div>
-          <div class="card-profit">淨利 +$${Math.round(s.netProfit)}</div>
-        </div>
-      `;
-    });
-
-    document.getElementById('today-rev').innerText = '$' + totalRev.toLocaleString();
-    document.getElementById('today-profit').innerText = '$' + totalProfit.toLocaleString();
-    const margin = totalRev > 0 ? Math.round((totalProfit / totalRev) * 100) : 0;
-    document.getElementById('today-margin').innerText = margin + '%';
-  }
-
-  render();
-</script>
+<script src="app.js"></script>
 </body>
 </html>

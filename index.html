@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>營收戰情室</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="home" class="page active">
+      <header><h2>戰情室概況</h2></header>
+      <div class="card highlight">
+        <h3>本日營業額</h3>
+        <div class="amount" id="today-revenue">$0</div>
+        <div class="sub-info">本日預估毛利：<span id="today-profit">$0</span></div>
+      </div>
+      <button class="btn primary" onclick="showForm('sale-form')">＋ 新增銷售</button>
+      <button class="btn secondary" onclick="showForm('purchase-form')">＋ 新增採購</button>
+    </section>
+
+    <section id="dashboard" class="page">
+      <header><h2>數據儀表板</h2></header>
+      <div class="card">
+        <h3>本月自營毛利</h3>
+        <div class="text-green" id="month-self-profit">$0</div>
+      </div>
+      <div class="card">
+        <h3>本月經銷純利 (15%)</h3>
+        <div class="text-blue" id="month-affiliate-profit">$0</div>
+      </div>
+      <div class="card warning">
+        <h3>待匯廠商貨款 (85%)</h3>
+        <div class="text-red" id="pending-payable">$0</div>
+      </div>
+    </section>
+
+    <section id="purchase" class="page">
+      <header><h2>採購與國際運費</h2></header>
+      <div id="purchase-list" class="list-container"></div>
+    </section>
+
+    <section id="sales" class="page">
+      <header><h2>銷售明細</h2></header>
+      <div id="sales-list" class="list-container"></div>
+    </section>
+
+    <div id="sale-form" class="modal">
+      <div class="modal-content">
+        <h3>新增銷售</h3>
+        <label>單號 / 識別碼</label>
+        <input type="text" id="sale-id" placeholder="例: 0416-P01">
+        
+        <label>模式</label>
+        <select id="sale-type">
+          <option value="self">現貨/預購 (自營)</option>
+          <option value="affiliate">經銷分潤 (15%)</option>
+        </select>
+
+        <label>收款金額 (含運)</label>
+        <input type="number" id="sale-amount" placeholder="0">
+
+        <label>支付方式</label>
+        <select id="sale-payment">
+          <option value="cash">現金 (無手續費)</option>
+          <option value="linepay">LINE Pay (2.2%)</option>
+          <option value="credit">信用卡/藍新 (2.8%+5)</option>
+        </select>
+
+        <label>國內運費成本</label>
+        <input type="number" id="sale-shipping" placeholder="0">
+
+        <div class="modal-actions">
+          <button class="btn" onclick="hideForm('sale-form')">取消</button>
+          <button class="btn primary" onclick="saveSale()">儲存</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="switchTab('home', this)">首頁</div>
+      <div class="nav-item" onclick="switchTab('dashboard', this)">儀表板</div>
+      <div class="nav-item" onclick="switchTab('purchase', this)">採購</div>
+      <div class="nav-item" onclick="switchTab('sales', this)">銷售</div>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

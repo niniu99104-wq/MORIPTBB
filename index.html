@@ -3,87 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>營收戰情室</title>
-  <link rel="stylesheet" href="style.css">
+  <title>阿霓 | 營收主宰系統</title>
+  <style>
+    :root {
+      --primary: #D4AF37; /* 金色 */
+      --bg: #0F0F0F;    /* 深黑背景 */
+      --card-bg: #1A1A1A;
+      --text: #E0E0E0;
+      --text-dim: #888;
+      --accent-red: #FF4D4D;
+      --accent-green: #00E676;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; background: var(--bg); color: var(--text); margin: 0; }
+    
+    #app { max-width: 500px; margin: 0 auto; min-height: 100vh; padding-bottom: 90px; }
+
+    /* Header */
+    header { padding: 40px 25px 20px; }
+    h1 { font-size: 1.8rem; letter-spacing: 2px; font-weight: 300; }
+    h1 span { color: var(--primary); font-weight: bold; }
+
+    /* Stats Card */
+    .summary-card {
+      background: linear-gradient(145deg, #222, #111);
+      margin: 0 20px 25px; border-radius: 20px; padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333;
+    }
+    .summary-label { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+    .summary-value { font-size: 2.2rem; font-weight: 700; margin: 5px 0 15px; color: #fff; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #333; pt: 15px; padding-top: 15px; }
+    .grid-item span { display: block; font-size: 0.75rem; color: var(--text-dim); }
+    .grid-item b { font-size: 1.1rem; color: var(--primary); }
+
+    /* Tab Switcher */
+    .tabs { display: flex; padding: 0 20px 20px; gap: 20px; }
+    .tab { font-size: 0.9rem; color: var(--text-dim); cursor: pointer; position: relative; padding-bottom: 5px; }
+    .tab.active { color: var(--primary); font-weight: bold; }
+    .tab.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--primary); }
+
+    /* List Items */
+    .list-container { padding: 0 20px; }
+    .card { background: var(--card-bg); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #2a2a2a; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .card-title { font-weight: 600; font-size: 1rem; }
+    .card-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; background: #333; color: var(--primary); }
+    .card-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
+    .card-row label { color: var(--text-dim); }
+    .card-profit { text-align: right; border-top: 1px solid #2a2a2a; padding-top: 10px; margin-top: 10px; font-weight: bold; color: var(--accent-green); }
+
+    /* Bottom Nav */
+    .nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: rgba(20,20,20,0.95); display: flex; padding: 15px 0 30px; border-top: 1px solid #222; backdrop-filter: blur(10px); }
+    .nav-item { flex: 1; text-align: center; color: var(--text-dim); font-size: 0.75rem; cursor: pointer; }
+    .nav-item.active { color: var(--primary); }
+
+    /* Floating Button */
+    .fab { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(212,175,55,0.4); cursor: pointer; z-index: 99; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: flex-end; }
+    .modal-content { background: #1a1a1a; width: 100%; border-radius: 25px 25px 0 0; padding: 30px 25px; border-top: 1px solid var(--primary); }
+    input, select { width: 100%; background: #252525; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; margin: 8px 0 15px; font-size: 1rem; }
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { flex: 1; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
+    .btn-save { background: var(--primary); color: #000; }
+    .btn-cancel { background: #333; color: #fff; }
+
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <section id="home" class="page active">
-      <header><h2>戰情室概況</h2></header>
-      <div class="card highlight">
-        <h3>本日營業額</h3>
-        <div class="amount" id="today-revenue">$0</div>
-        <div class="sub-info">本日預估毛利：<span id="today-profit">$0</span></div>
-      </div>
-      <button class="btn primary" onclick="showForm('sale-form')">＋ 新增銷售</button>
-      <button class="btn secondary" onclick="showForm('purchase-form')">＋ 新增採購</button>
-    </section>
 
-    <section id="dashboard" class="page">
-      <header><h2>數據儀表板</h2></header>
-      <div class="card">
-        <h3>本月自營毛利</h3>
-        <div class="text-green" id="month-self-profit">$0</div>
-      </div>
-      <div class="card">
-        <h3>本月經銷純利 (15%)</h3>
-        <div class="text-blue" id="month-affiliate-profit">$0</div>
-      </div>
-      <div class="card warning">
-        <h3>待匯廠商貨款 (85%)</h3>
-        <div class="text-red" id="pending-payable">$0</div>
-      </div>
-    </section>
+<div id="app">
+  <header>
+    <h1>阿霓 <span>ANNI</span></h1>
+  </header>
 
-    <section id="purchase" class="page">
-      <header><h2>採購與國際運費</h2></header>
-      <div id="purchase-list" class="list-container"></div>
-    </section>
+  <div class="summary-card">
+    <div class="summary-label">本日營收</div>
+    <div class="summary-value" id="today-rev">$0</div>
+    <div class="summary-grid">
+      <div class="grid-item"><span>預估純利</span><b id="today-profit">$0</b></div>
+      <div class="grid-item"><span>毛利率</span><b id="today-margin">0%</b></div>
+    </div>
+  </div>
 
-    <section id="sales" class="page">
-      <header><h2>銷售明細</h2></header>
-      <div id="sales-list" class="list-container"></div>
-    </section>
+  <div class="tabs">
+    <div class="tab active" onclick="switchView('sales')">銷售明細</div>
+    <div class="tab" onclick="switchView('purchases')">採購攤提</div>
+    <div class="tab" onclick="switchView('dashboard')">營運總覽</div>
+  </div>
 
-    <div id="sale-form" class="modal">
-      <div class="modal-content">
-        <h3>新增銷售</h3>
-        <label>單號 / 識別碼</label>
-        <input type="text" id="sale-id" placeholder="例: 0416-P01">
-        
-        <label>模式</label>
-        <select id="sale-type">
-          <option value="self">現貨/預購 (自營)</option>
-          <option value="affiliate">經銷分潤 (15%)</option>
-        </select>
-
-        <label>收款金額 (含運)</label>
-        <input type="number" id="sale-amount" placeholder="0">
-
-        <label>支付方式</label>
-        <select id="sale-payment">
-          <option value="cash">現金 (無手續費)</option>
-          <option value="linepay">LINE Pay (2.2%)</option>
-          <option value="credit">信用卡/藍新 (2.8%+5)</option>
-        </select>
-
-        <label>國內運費成本</label>
-        <input type="number" id="sale-shipping" placeholder="0">
-
-        <div class="modal-actions">
-          <button class="btn" onclick="hideForm('sale-form')">取消</button>
-          <button class="btn primary" onclick="saveSale()">儲存</button>
-        </div>
-      </div>
+  <div id="sales-view" class="list-container">
     </div>
 
-    <nav class="bottom-nav">
-      <div class="nav-item active" onclick="switchTab('home', this)">首頁</div>
-      <div class="nav-item" onclick="switchTab('dashboard', this)">儀表板</div>
-      <div class="nav-item" onclick="switchTab('purchase', this)">採購</div>
-      <div class="nav-item" onclick="switchTab('sales', this)">銷售</div>
-    </nav>
+  <div id="purchases-view" class="list-container hidden">
+    </div>
+
+  <div class="fab" onclick="showModal('sale-modal')">＋</div>
+
+  <nav class="nav">
+    <div class="nav-item active">首頁</div>
+    <div class="nav-item">儀表板</div>
+    <div class="nav-item">對帳</div>
+    <div class="nav-item">我的</div>
+  </nav>
+</div>
+
+<div id="sale-modal" class="modal">
+  <div class="modal-content">
+    <h3 style="margin-top:0">新增交易錄入</h3>
+    <label>交易類型</label>
+    <select id="type" onchange="toggleAffiliateFields()">
+      <option value="self">自營童裝</option>
+      <option value="affiliate">經銷分潤</option>
+    </select>
+    
+    <label>金額 (售價+運費)</label>
+    <input type="number" id="amount" placeholder="0">
+
+    <div id="self-fields">
+      <label>商品採購成本</label>
+      <input type="number" id="cost" placeholder="0">
+    </div>
+
+    <div id="affiliate-fields" class="hidden">
+      <label>分潤比例 (%)</label>
+      <input type="number" id="percent" value="15">
+    </div>
+
+    <label>支付方式</label>
+    <select id="payment">
+      <option value="cash">現金 / 轉帳</option>
+      <option value="linepay">LINE Pay (2.2%)</option>
+      <option value="credit">信用卡 (2.8%+5)</option>
+    </select>
+
+    <div class="btn-group">
+      <button class="btn btn-cancel" onclick="closeModal('sale-modal')">取消</button>
+      <button class="btn btn-save" onclick="addTransaction()">確認儲存</button>
+    </div>
   </div>
-  <script src="app.js"></script>
+</div>
+
+<script>
+  let data = JSON.parse(localStorage.getItem('anni_data')) || { sales: [], purchases: [] };
+
+  function switchView(view) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('sales-view').classList.add('hidden');
+    document.getElementById('purchases-view').classList.add('hidden');
+    document.getElementById(view + '-view').classList.remove('hidden');
+    render();
+  }
+
+  function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  function toggleAffiliateFields() {
+    const type = document.getElementById('type').value;
+    document.getElementById('self-fields').classList.toggle('hidden', type === 'affiliate');
+    document.getElementById('affiliate-fields').classList.toggle('hidden', type !== 'affiliate');
+  }
+
+  function addTransaction() {
+    const type = document.getElementById('type').value;
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const payment = document.getElementById('payment').value;
+    
+    // 金流手續費計算
+    let fee = 0;
+    if(payment === 'linepay') fee = amount * 0.022;
+    if(payment === 'credit') fee = (amount * 0.028) + 5;
+
+    let netProfit = 0;
+    if(type === 'self') {
+      const cost = parseFloat(document.getElementById('cost').value) || 0;
+      netProfit = amount - cost - fee;
+    } else {
+      const percent = parseFloat(document.getElementById('percent').value) || 15;
+      netProfit = (amount * (percent/100)) - fee;
+    }
+
+    data.sales.push({
+      date: new Date().toLocaleDateString(),
+      type, amount, fee, netProfit, 
+      id: 'ORD-' + Math.floor(Math.random()*9000 + 1000)
+    });
+    
+    save();
+    closeModal('sale-modal');
+    render();
+  }
+
+  function save() {
+    localStorage.setItem('anni_data', JSON.stringify(data));
+  }
+
+  function render() {
+    const salesView = document.getElementById('sales-view');
+    salesView.innerHTML = '';
+    
+    let totalRev = 0;
+    let totalProfit = 0;
+
+    data.sales.reverse().forEach(s => {
+      totalRev += s.amount;
+      totalProfit += s.netProfit;
+      
+      salesView.innerHTML += `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">${s.id}</div>
+            <div class="card-tag">${s.type === 'self' ? '自營童裝' : '經銷分潤'}</div>
+          </div>
+          <div class="card-row"><label>銷售金額</label><span>$${s.amount}</span></div>
+          <div class="card-row"><label>金流成本</label><span>$${Math.round(s.fee)}</span></div>
+          <div class="card-profit">淨利 +$${Math.round(s.netProfit)}</div>
+        </div>
+      `;
+    });
+
+    document.getElementById('today-rev').innerText = '$' + totalRev.toLocaleString();
+    document.getElementById('today-profit').innerText = '$' + totalProfit.toLocaleString();
+    const margin = totalRev > 0 ? Math.round((totalProfit / totalRev) * 100) : 0;
+    document.getElementById('today-margin').innerText = margin + '%';
+  }
+
+  render();
+</script>
 </body>
 </html>
